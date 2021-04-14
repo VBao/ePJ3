@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using eProject3_1.Models;
 using eProject3_1.Services;
@@ -19,6 +20,7 @@ namespace eProject3_1.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            ViewBag.Stat = _context.GetApplicantStatus();
             return View(_context.GetApplicants());
         }
 
@@ -59,6 +61,12 @@ namespace eProject3_1.Controllers
             if (!ModelState.IsValid) return View();
             _context.EditApplicant(app);
             return RedirectToAction("Index", "Home");
+        }
+        [HttpGet]
+        public IActionResult ChangeStats(string id, string stat)
+        {
+            if (_context.SetApplicantStatus(id, Convert.ToInt32(stat)) == false) return RedirectToAction("Index","Account");
+            return RedirectToAction("Index");
         }
     }
 }

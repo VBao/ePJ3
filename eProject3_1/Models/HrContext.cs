@@ -104,7 +104,6 @@ namespace eProject3_1.Models
                     .HasColumnName("Vacancy_Id")
                     .HasMaxLength(5)
                     .IsUnicode(false);
-                entity.Property(e => e.CreateAt).HasColumnType("date");
 
                 entity.HasOne(d => d.Applicant)
                     .WithMany(p => p.ApplicantionList)

@@ -81,6 +81,7 @@ namespace eProject3_1.Services
             Vacancy oldVac = _ctx.Vacancy.First(v => v.Id == vac.Id);
             oldVac.Title = vac.Title;
             oldVac.Details = vac.Details;
+            oldVac.JobNumber = vac.JobNumber;
             oldVac.EmployeeId = vac.EmployeeId;
             oldVac.Close = vac.Close;
             oldVac.StatusId = vac.StatusId;
@@ -145,7 +146,9 @@ namespace eProject3_1.Services
 
         public Applicant GetApplicant(string id)
         {
-            return _ctx.Applicant.First(u => u.Id == id);
+            Applicant app = _ctx.Applicant.First(u => u.Id == id);
+            app.Status = _ctx.ApplicantStatus.First(s => s.Id == app.StatusId);
+            return app;
         }
 
         public Applicant GetApplicantForm()
@@ -158,7 +161,8 @@ namespace eProject3_1.Services
             }
             else
             {
-                sId = sId.Remove(0);
+                sId = sId.Trim('A');
+                sId = sId.Trim('0');
                 int iId = Convert.ToInt32(sId) + 1;
                 sId = iId.ToString();
                 iId = iId.ToString().Length;
@@ -191,7 +195,7 @@ namespace eProject3_1.Services
 
         public bool SetApplicantStatus(string aId, int aStat)
         {
-            Vacancy updateStat = _ctx.Vacancy.First(v => v.Id == aId);
+            Applicant updateStat = _ctx.Applicant.First(v => v.Id == aId);
             updateStat.StatusId = aStat;
             return _ctx.SaveChanges() > 0;
         }

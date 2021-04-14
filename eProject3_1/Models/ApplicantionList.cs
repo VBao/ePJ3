@@ -18,7 +18,6 @@ namespace eProject3_1.Models
         public string ApplicantId { get; set; }
         public string VacancyId { get; set; }
         public int? StatusId { get; set; }
-        public DateTime? CreateAt { get; set; }
 
         public virtual Applicant Applicant { get; set; }
         public virtual InterviewStatus Status { get; set; }

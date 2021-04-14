@@ -24,17 +24,8 @@ namespace eProject3_1.Controllers
         public IActionResult Index()
         {
             string a=User.Identity.Name;
-            ViewData["eId"]=Request.Cookies["eId"];
-            ViewBag.Stat = _context.GetVacancyStatus().Where(s=>s.Id!=2).Select(s => new SelectListItem
-            {
-                Value = s.Id.ToString(),
-                Text = s.Status
-            });
-            ViewBag.StatR = _context.GetVacancyStatus().Select(s => new SelectListItem
-            {
-                Value = s.Id.ToString(),
-                Text = s.Status
-            });
+            ViewBag.Stat=_context.GetVacancyStatus().Where(s=>s.Id!=2).ToList();
+            ViewBag.StatR = _context.GetVacancyStatus().ToList();
             return View(_context.GetVacancies());
         }
 
@@ -56,7 +47,6 @@ namespace eProject3_1.Controllers
                 Text = d.Status,
                 Value = d.Id.ToString()
             });
-
             return View(_context.GetVacancyForm());
         }
 
@@ -102,9 +92,14 @@ namespace eProject3_1.Controllers
         public IActionResult Details(string id)
         {
             ViewBag.Apps = _context.GetChosenApplicants(id);
-            
-            // return View(_context.GetVacancy(id));
             return View(_context.GetVacancy(id));
+        }
+
+        [HttpGet]
+        public IActionResult ChangeStats(string id, string stat)
+        {
+            if (_context.SetVacancyStatus(id, Convert.ToInt32(stat)) == false) return RedirectToAction("Index","Account");
+            return RedirectToAction("Index");
         }
     }
 }
