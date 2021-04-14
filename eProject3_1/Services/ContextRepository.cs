@@ -141,8 +141,21 @@ namespace eProject3_1.Services
             {
                 app.Status = _ctx.ApplicantStatus.First(a => a.Id == app.StatusId);
             }
+
             return apps;
         }
+
+        public List<Vacancy> GetVacanciesBaseDepartment(int idDepart)
+        {
+            List<Vacancy> vacs = _ctx.Vacancy.Where(a => false).ToList();
+            foreach (Vacancy vac in vacs)
+            {
+                vac.Status = _ctx.VacancyStatus.First(a => a.Id == vac.StatusId);
+            }
+
+            return vacs;
+        }
+
 
         public Applicant GetApplicant(string id)
         {
@@ -170,6 +183,7 @@ namespace eProject3_1.Services
                 sId = sId.Insert(0, "A");
                 vac.Id = sId;
             }
+
             return vac;
         }
 
@@ -203,6 +217,35 @@ namespace eProject3_1.Services
         public List<ApplicantStatus> GetApplicantStatus()
         {
             return _ctx.ApplicantStatus.ToList();
+        }
+
+        public bool CreateInterview()
+        {
+            return false;
+        }
+
+        public List<InterviewStatus> GetInterviewStatus()
+        {
+            return _ctx.InterviewStatus.ToList();
+        }
+
+        public List<ApplicantionList> GetListInterview()
+        {
+            List<ApplicantionList> list = _ctx.ApplicantionList.ToList();
+            foreach (ApplicantionList app in list)
+            {
+                app.Applicant = GetApplicant(app.ApplicantId);
+                app.Vacancy = GetVacancy(app.VacancyId);
+                app.Status = _ctx.InterviewStatus.First(s=>s.Id==app.StatusId);
+            }
+
+            return list;
+        }
+
+        public bool CreateListInterview(ApplicantionList inter)
+        {
+            _ctx.ApplicantionList.Add(inter);
+            return _ctx.SaveChanges() > 0;
         }
     }
 }

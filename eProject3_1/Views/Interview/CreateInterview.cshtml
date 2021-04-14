@@ -1,0 +1,66 @@
+﻿@model ApplicantionList
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Matchmaking</h2>
+<h3>Vacancy List</h3>
+<table class="table">
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Slot</th>
+        <th>Department</th>
+        <th>Close Date</th>
+    </tr>
+    @foreach (Vacancy vac in (List<Vacancy>) ViewBag.Vacs)
+    {
+        <tr>
+            <td>@vac.Id</td>
+            <td>@vac.Title</td>
+            <td>@vac.JobNumber</td>
+            <td>@vac.Department.Name</td>
+            <td>@vac.Close</td>
+        </tr>
+    }
+</table>
+<table class="table">
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Slot</th>
+        <th>Department</th>
+        <th>Close Date</th>
+    </tr>
+    @foreach (Applicant app in (List<Applicant>) ViewBag.Apps)
+    {
+        <tr>
+            <td>@app.Id</td>
+            <td>@app.Name</td>
+            <td>@app.Phone</td>
+            <td>@app.CvFile</td>
+            <td>@app.Status.Status</td>
+        </tr>
+    }
+</table>
+
+<form asp-action="CreateInterview" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ApplicantId" class="control-label"></label>
+                <select asp-for="ApplicantId" class ="form-control" asp-items="ViewBag.ApplicantId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="VacancyId" class="control-label"></label>
+                <select asp-for="VacancyId" class ="form-control" asp-items="ViewBag.VacancyId"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="StatusId" class="control-label"></label>
+                <select asp-for="StatusId" class ="form-control" asp-items="ViewBag.StatusId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>

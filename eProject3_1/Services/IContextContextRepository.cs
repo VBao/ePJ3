@@ -6,6 +6,7 @@ namespace eProject3_1.Services
     public interface IContextContextRepository
     {
         public Vacancy Test();
+
         // TODO Work with Vacancy
         public List<Vacancy> GetVacancies();
         public Vacancy GetVacancy(string id);
@@ -34,5 +35,12 @@ namespace eProject3_1.Services
         public void EditApplicant(Applicant app);
         public bool SetApplicantStatus(string aId, int aStat);
         public List<ApplicantStatus> GetApplicantStatus();
+
+        // Interview function
+        public bool CreateInterview();
+        public List<ApplicantionList> GetListInterview();
+        public List<Vacancy> GetVacanciesBaseDepartment(int idDepart);
+        public List<InterviewStatus> GetInterviewStatus();
+        public bool CreateListInterview(ApplicantionList inter);
     }
 }
