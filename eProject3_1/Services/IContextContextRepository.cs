@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using eProject3_1.Models;
 
@@ -37,10 +38,17 @@ namespace eProject3_1.Services
         public List<ApplicantStatus> GetApplicantStatus();
 
         // Interview function
-        public bool CreateInterview();
         public List<ApplicantionList> GetListInterview();
         public List<Vacancy> GetVacanciesBaseDepartment(int idDepart);
         public List<InterviewStatus> GetInterviewStatus();
         public bool CreateListInterview(ApplicantionList inter);
+        public bool SetInterviewStatus(int iId, int stats);
+        
+        
+        // Interview detail function
+        public bool CheckTime(DateTime start, DateTime end,int interviewerId);
+        public InterviewDetail GetScheduleForm(int interId,int interviewerId);
+        public bool CreateSchedule(InterviewDetail de);
+        public List<Interviewer> GetInterviewers(string vacancyId = null,string interviewListId=null);
     }
 }

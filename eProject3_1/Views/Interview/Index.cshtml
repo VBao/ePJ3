@@ -2,46 +2,98 @@
 
 @{
     ViewData["Title"] = "Index";
+    IEnumerable<SelectListItem> StatList(string id, int rId)
+    {
+        List<SelectListItem> rs = new List<SelectListItem>();
+        foreach (ApplicantStatus v in (List<ApplicantStatus>) ViewBag.Stat)
+        {
+            if (v.Id != rId)
+            {
+                rs.Add(new SelectListItem
+                {
+                    Text = v.Status,
+                    Value = id + "/" + v.Id
+                }
+                    );
+            }
+        }
+        return rs;
+    }
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="CreateInterview">Create New</a>
 </p>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Applicant)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Vacancy)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Applicant)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Vacancy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status.Status)
+        </th>
+        <th>
+
+        </th>
+    </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model)
+    {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Applicant.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status.Id)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Vacancy.Id)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Vacancy.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Applicant.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Applicant.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status.Id)
+                <select style="display: none" id="stats" class="form-control change" asp-items="@StatList(item.Id.ToString(), item.Status.Id)">
+                    <option value="">-- Change --</option>
+                </select>
+            </td>
+            <td>
+                @if(item.StatusId==2){<a asp-action="ChooseInterviewer" asp-route-id="@item.Id">Set Schedule</a> }
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a href="#" id="change">Change Status</a>
+
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>
+<script>
+        document.getElementById("change").addEventListener("click",show);
+        document.getElementById("stats").addEventListener("change",changeStats);
+        function show() {
+          var el=document.getElementById("stats");
+          var elT=document.getElementById("statsT");
+          if(el.style.display === "none"){
+                  el.style.display = "block";
+                  elT.style.display = "none";
+              }else{
+                  el.style.display = "none";
+                  elT.style.display = "block";
+              }
+        }
+        function changeStats() {
+          var stat=document.getElementById("stats").value;
+          var url='@Url.Action("ChangeStats")'+'/'+stat+'/';
+          // document.getElementById("demo").innerHTML=url;
+          window.open(url);
+        }
+        </script>

@@ -476,3 +476,5 @@ D:\Programming\Project\eProject3_1\eProject3_1\obj\Debug\netcoreapp3.1\eProject3
 D:\Programming\Project\eProject3_1\eProject3_1\obj\Debug\netcoreapp3.1\Razor\Views\Interview\CreateInterview.cshtml.g.cs
 D:\Programming\Project\eProject3_1\eProject3_1\obj\Debug\netcoreapp3.1\Razor\Views\View.cshtml.g.cs
 D:\Programming\Project\eProject3_1\eProject3_1\obj\Debug\netcoreapp3.1\Razor\Views\Interview\Index.cshtml.g.cs
+D:\Programming\Project\eProject3_1\eProject3_1\obj\Debug\netcoreapp3.1\Razor\Views\Interview\ChooseInterviewer.cshtml.g.cs
+D:\Programming\Project\eProject3_1\eProject3_1\obj\Debug\netcoreapp3.1\Razor\Views\Interview\InterviewSchedule.cshtml.g.cs

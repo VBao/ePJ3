@@ -1,0 +1,50 @@
+﻿@model eProject3_1.Models.InterviewDetail
+
+@{
+    ViewData["Title"] = "InterviewSchedule";
+    var err = ViewBag.Err == null ? "" : ViewBag.Err;
+}
+
+<h1>InterviewSchedule</h1>
+<h1>
+    @err
+</h1>
+<div id="form-group">
+                <h3>Interviewer Details</h3>
+                <h4>Id: @Model.Interviewer.Id</h4>
+                <h4>Name: @Model.Interviewer.Name</h4>
+            </div>
+<h4>Interview Detail</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="PostInterviewSchedule" asp-controller="Interview" method="post">
+            @Html.Hidden("InterviewerId")
+            @Html.Hidden("ApplicationListId")
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Date"  class="control-label"></label>
+                <input asp-for="Date" type="Date" class="form-control"/>
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartTime" class="control-label"></label>
+                <input asp-for="StartTime" type="time" class="form-control"/>
+                <span asp-validation-for="StartTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndTime" class="control-label"></label>
+                <input asp-for="EndTime" type="time" class="form-control"/>
+                <span asp-validation-for="EndTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

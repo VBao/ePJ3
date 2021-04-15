@@ -95,7 +95,7 @@ namespace eProject3_1.Controllers
             return View(_context.GetVacancy(id));
         }
 
-        [HttpGet]
+        [HttpGet("Vacancy/ChangeStats/{id}/{stat}")]
         public IActionResult ChangeStats(string id, string stat)
         {
             if (_context.SetVacancyStatus(id, Convert.ToInt32(stat)) == false) return RedirectToAction("Index","Account");

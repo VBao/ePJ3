@@ -54,7 +54,8 @@ namespace eProject3_1.Services
 
             else
             {
-                sId = sId.Remove(0);
+                sId = sId.Trim('V');
+                sId = sId.Trim('0');
                 int iId = Convert.ToInt32(sId) + 1;
                 sId = iId.ToString();
                 iId = iId.ToString().Length;
@@ -219,11 +220,6 @@ namespace eProject3_1.Services
             return _ctx.ApplicantStatus.ToList();
         }
 
-        public bool CreateInterview()
-        {
-            return false;
-        }
-
         public List<InterviewStatus> GetInterviewStatus()
         {
             return _ctx.InterviewStatus.ToList();
@@ -236,7 +232,7 @@ namespace eProject3_1.Services
             {
                 app.Applicant = GetApplicant(app.ApplicantId);
                 app.Vacancy = GetVacancy(app.VacancyId);
-                app.Status = _ctx.InterviewStatus.First(s=>s.Id==app.StatusId);
+                app.Status = _ctx.InterviewStatus.First(s => s.Id == app.StatusId);
             }
 
             return list;
@@ -247,5 +243,79 @@ namespace eProject3_1.Services
             _ctx.ApplicantionList.Add(inter);
             return _ctx.SaveChanges() > 0;
         }
+
+        public bool SetInterviewStatus(int iId, int stats)
+        {
+            ApplicantionList inter = _ctx.ApplicantionList.First(i => i.Id == iId);
+            inter.StatusId = stats;
+            return _ctx.SaveChanges() > 0;
+        }
+
+        public InterviewDetail GetScheduleForm(int interId,int interviewerId)
+        {
+            InterviewDetail detail = new InterviewDetail();
+            detail.ApplicationListId = interId;
+            detail.ApplicationList = _ctx.ApplicantionList.First(a=>a.Id==interId);
+            detail.InterviewerId = interviewerId;
+            detail.Interviewer = _ctx.Interviewer.First(i=>i.Id==interviewerId);
+            return detail;
+        }
+
+        public bool CheckTime(DateTime start, DateTime end,int interviewerId)
+        {
+            if (DateTime.Compare(start,end) >= 0)
+            {
+                return false;
+            }
+            List<InterviewDetail> appoint = _ctx.InterviewDetail.Where(d => d.InterviewerId == interviewerId).ToList();
+            foreach (InterviewDetail detail in appoint)
+            {
+                if (DateTime.Compare(start, detail.StartTime) > 0)
+                {
+                    if (DateTime.Compare(end,detail.StartTime) <=0)
+                    {
+                        return false;
+                    }
+                }else if (DateTime.Compare(start, detail.EndTime) < 0)
+                {
+                    if (DateTime.Compare(end,detail.EndTime) >= 0)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        public bool CreateSchedule(InterviewDetail de)
+        {
+            _ctx.InterviewDetail.Add(de);
+            ApplicantionList a=_ctx.ApplicantionList.First(a => a.Id == de.ApplicationListId);
+            a.StatusId = 1;
+            return _ctx.SaveChanges() > 0;
+        }
+        
+        public List<Interviewer> GetInterviewers(string? vacancyId,string? interviewListId)
+        {
+             string departmentId = interviewListId != null
+                ? _ctx.Vacancy
+                    .First(v => v.Id == _ctx.ApplicantionList.First(i => i.Id == Convert.ToInt32(interviewListId)).VacancyId)
+                    .DepartmentId
+                : _ctx.Vacancy.First(v => v.Id == vacancyId).DepartmentId;
+
+            List<Interviewer> list = vacancyId == null ? _ctx.Interviewer.ToList() : _ctx.Interviewer.Where(i => i.DepartmentId == departmentId).ToList();
+
+            foreach (Interviewer interviewer in list)
+            {
+                interviewer.Department = _ctx.Department.First(d => d.Id == interviewer.DepartmentId);
+            }
+
+            return list;
+        }
+
     }
 }

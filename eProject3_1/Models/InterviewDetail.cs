@@ -11,8 +11,8 @@ namespace eProject3_1.Models
     {
         public int Id { get; set; }
         public DateTime? Date { get; set; }
-        public DateTime? StartTime { get; set; }
-        public DateTime? EndTime { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
         public int? ApplicationListId { get; set; }
         public int? InterviewerId { get; set; }
 

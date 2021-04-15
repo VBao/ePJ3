@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using eProject3_1.Models;
 using eProject3_1.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,7 +16,7 @@ namespace eProject3_1.Controllers
         }
         public IActionResult Index()
         {
-            
+            ViewBag.Stat = _context.GetApplicantStatus();
             return View(_context.GetListInterview());
         }
 
@@ -50,6 +48,41 @@ namespace eProject3_1.Controllers
         public IActionResult CreateInterview(ApplicantionList al)
         {
             if (_context.CreateListInterview(al) == false) return RedirectToAction("Index","Account");
+            return RedirectToAction("Index");
+        }
+        
+        [HttpGet("Interview/ChangeStats/{id}/{stat}")]
+        public IActionResult ChangeStats(string id, string stat)
+        {
+            if (_context.SetInterviewStatus(Convert.ToInt32(id), Convert.ToInt32(stat)) == false) return RedirectToAction("Index","Account");
+            return RedirectToAction("Index");
+        }
+        
+        //TODO Interview details
+        [HttpGet]
+        public IActionResult ChooseInterviewer(string id)
+        {
+            ViewBag.interviewId = id;
+            return View(_context.GetInterviewers(interviewListId:id));
+        }
+
+        [HttpGet("Interview/InterviewSchedule/{interId}/{interviewerId}")]
+        public IActionResult InterviewSchedule(int interId,int interviewerId,string? error)
+        {
+            ViewBag.Err = error ?? "";
+            return View(_context.GetScheduleForm(interId,interviewerId));
+        }
+
+        [HttpPost]
+        public IActionResult PostInterviewSchedule(InterviewDetail detail)
+        {
+            if (!_context.CheckTime(detail.StartTime, detail.EndTime, detail.Id))
+            {
+                
+                return RedirectToAction("InterviewSchedule",new {error="Please input right start and end time"});
+            }
+            
+            if (_context.CreateSchedule(detail) == false) return RedirectToAction("Index","Account");
             return RedirectToAction("Index");
         }
     }
